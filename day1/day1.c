@@ -25,15 +25,15 @@ struct Elve *add(struct Elve *listp, struct Elve *new_elve) {
   return new_elve;
 }
 
-struct Elve *add_front(struct Elve *listp, struct Elve *new_elve) {
-  if (listp == NULL || new_elve->calories < listp->calories) {
+struct Elve *insert_ascending(struct Elve *listp, struct Elve *new_elve) {
+  if (listp == NULL || new_elve->calories > listp->calories) {
     return add(listp, new_elve);
   }
 
   struct Elve *head = listp;
 
   for (; head->next != NULL; head = head->next) {
-    if (head->calories < new_elve->calories && head->next->calories > new_elve->calories) {
+    if (head->calories > new_elve->calories && head->next->calories < new_elve->calories) {
       new_elve->next = head->next;
       break;;
     }
@@ -46,45 +46,30 @@ struct Elve *add_front(struct Elve *listp, struct Elve *new_elve) {
 int main() {
   struct Elve *elves = NULL;
 
-  FILE *file;
+  FILE *stream;
   char line[MAX_LEN], *result;
+  int tracker, sum = 0;
 
-  struct CalorieRanking {
-    int first;
-    int second;
-    int third;
+  stream = fopen("./food.txt", "r");
 
-    int tracker;
-  };
-
-  struct CalorieRanking foo = { 0, 0, 0, 0 };
-
-  file = fopen("./test.txt", "r");
-
-  while ((result = fgets(line, MAX_LEN, file)) != NULL) {
+  while ((result = fgets(line, MAX_LEN, stream)) != NULL) {
     if (strcmp(result, "\n") == 0) {
-      elves = add_front(elves, new_item(foo.tracker));
-
-      foo.tracker = 0;
+      elves = insert_ascending(elves, new_item(tracker));
+      tracker = 0;
     } else {
-      foo.tracker += atoi(result);
+      tracker += atoi(result);
     }
   }
 
-  elves = add_front(elves, new_item(foo.tracker));
-  // printf("VALUE before loop IS: %d\n", elves->calories);
-  while (elves != NULL) {
-    printf("VALUE IS: %d\n", elves->calories);
+  elves = insert_ascending(elves, new_item(tracker));
+  for (int i = 0; i < 3; i++) {
+    sum += elves->calories;
     elves = elves->next;
   }
 
-  // printf("FIRST: counter[%i]\n", foo.first);
-  // printf("SECOND: counter[%i]\n", foo.second);
-  // printf("THIRD: counter[%i]\n", foo.third);
+  printf("The sum is: [%i]\n", sum);
 
-  // printf("FOO IS: counter[%i]\n", foo.first + foo.second + foo.third);
-
-  if (fclose(file)) {
+  if (fclose(stream)) {
     perror("Error on close file");
   }
 
