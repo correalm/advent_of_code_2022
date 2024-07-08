@@ -20,37 +20,27 @@ struct Elve *new_item(int calories) {
   return new_elve;
 }
 
-// struct Elve *add_front(struct Elve *listp, struct Elve *new_elve) {
-//   new_elve->next = listp;
-//   return new_elve;
-// }
+struct Elve *add(struct Elve *listp, struct Elve *new_elve) {
+  new_elve->next = listp;
+  return new_elve;
+}
 
 struct Elve *add_front(struct Elve *listp, struct Elve *new_elve) {
-  if (listp == NULL) {
-    new_elve->next = listp;
-    return new_elve;
-  } else {
-    if (new_elve->calories < listp->calories) {
+  if (listp == NULL || new_elve->calories < listp->calories) {
+    return add(listp, new_elve);
+  }
 
-      new_elve->next = listp;
-      return new_elve;
-    } else {
-      struct Elve *head = listp;
+  struct Elve *head = listp;
 
-      for (; head->next != NULL; head = head->next) {
-        if (head->calories < new_elve->calories && head->next->calories > new_elve->calories) {
-          new_elve->next = head->next;
-          head->next = new_elve;
-          break;;
-        }
-      }
-
-      if (head->next == NULL) {
-        head->next = new_elve;
-      }
-      return listp;
+  for (; head->next != NULL; head = head->next) {
+    if (head->calories < new_elve->calories && head->next->calories > new_elve->calories) {
+      new_elve->next = head->next;
+      break;;
     }
   }
+
+  head->next = new_elve;
+  return listp;
 }
 
 int main() {
