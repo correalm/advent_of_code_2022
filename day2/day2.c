@@ -46,33 +46,25 @@ int main() {
     int opponent = (int) token[0];
     int current_game = (int) token_test[0];
 
-     for (int i = 0; i < 3; i++) {
-       if (opponent == opponent_moves[i]) {
-         opponent_count += values[i];
-       }
-     }
+    for (int i = 0; i < 3; i++) {
+      if (opponent == opponent_moves[i]) {
+        opponent_count += values[i];
+      }
+    }
 
-     for (int i = 0; i < 3; i++) {
-       if (current_game == moves[i]) {
-         count += values[i];
-       }
-     }
+    for (int i = 0; i < 3; i++) {
+      if (current_game == moves[i]) {
+        count += values[i];
+      }
+    }
 
-     if (opponent_count == ROCK && count == PAPER) {
-        count += WIN;
-     } else if (opponent_count == ROCK && count == SCISSORS) {
-        opponent_count += WIN;
-     } else if (opponent_count == PAPER && count == ROCK) {
-        opponent_count += WIN;
-     } else if (opponent_count == PAPER && count == SCISSORS) {
-        count += WIN;
-     } else if (opponent_count == SCISSORS && count == ROCK) {
-        count += WIN;
-     } else if (opponent_count == SCISSORS && count == PAPER) {
-        opponent_count += WIN;
-     } else {
-        count += DRAW;
-     }
+    if ((opponent_count - count) == 2 || (opponent_count - count) == -1) {
+      count += WIN;
+    } else if ((opponent_count - count) == 1 || (opponent_count - count) == -2) {
+      opponent_count += WIN;
+    } else {
+      count += DRAW;
+    }
   }
 
   printf("The result is: %d\n", accumulator);
