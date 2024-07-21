@@ -14,58 +14,67 @@ enum game {
   SCISSORS = 3
 };
 
+const int MOVE_COUNT = 3;
+int const VALUES[] = { ROCK, PAPER, SCISSORS };
+
 char opponent_moves[] = { 'A', 'B', 'C' };
 char moves[] = { 'X', 'Y', 'Z' };
-int values[] = { ROCK, PAPER, SCISSORS };
 
 const int SIZE = 4;
 const char *separator = " ";
 
+_Bool player_wins(int player_move, int opponent_move) {
+  int result = opponent_move - player_move;
+  return result == 2 || result == -1;
+}
+
+_Bool is_draw(int player_move, int opponent_move) {
+  return (player_move - opponent_move) == 0;
+}
+
+int play_value(int play, char *moves) {
+  for (int i = 0; i < MOVE_COUNT; i++) {
+    if (play == moves[i]) return VALUES[i];
+  }
+
+  return 0;
+}
+
 int main() {
   int accumulator = 0;
-  int opponent_count = 0;
-  int count = 0;
+  int current_game = 0;
 
   FILE *stream;
-  char line[SIZE], *token, *token_test;
+  char line[SIZE], *p_opponent_play, *p_play;
 
   stream = fopen("./strategy.txt", "r");
 
   while ((fgets(line, SIZE, stream)) != NULL) {
     if (strcmp(line, "\n") == 0) {
-      accumulator += count;
+      accumulator += current_game;
 
-      opponent_count = 0;
-      count = 0;
+      current_game = 0;
       continue;
     };
 
-    token = strtok(line, separator);
-    token_test = strtok(NULL, separator);
+    p_opponent_play = strtok(line, separator);
+    p_play = strtok(NULL, separator);
 
-    int opponent = (int) token[0];
-    int current_game = (int) token_test[0];
+    int opponent_play = (int) p_opponent_play[0];
+    int play = (int) p_play[0];
 
-    for (int i = 0; i < 3; i++) {
-      if (opponent == opponent_moves[i]) {
-        opponent_count += values[i];
-      }
+    int opponent_play_value = play_value(opponent_play, opponent_moves);
+    current_game = play_value(play, moves);
+
+    if (is_draw(current_game, opponent_play_value)) {
+      current_game += DRAW;
+      continue;
     }
 
-    for (int i = 0; i < 3; i++) {
-      if (current_game == moves[i]) {
-        count += values[i];
-      }
-    }
-
-    if ((opponent_count - count) == 2 || (opponent_count - count) == -1) {
-      count += WIN;
-    } else if ((opponent_count - count) == 1 || (opponent_count - count) == -2) {
-      opponent_count += WIN;
-    } else {
-      count += DRAW;
-    }
+    if (player_wins(current_game, opponent_play_value)) { current_game += WIN; }
   }
+
+  fclose(stream);
 
   printf("The result is: %d\n", accumulator);
 }
