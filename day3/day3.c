@@ -4,6 +4,9 @@
 #include <string.h>
 #include <limits.h>
 
+int const UPPERCASE_OFFSET = 38;
+int const LOWERCASE_OFFSET = 96;
+
 struct Node {
   int value;
   struct Node *next;
@@ -58,8 +61,8 @@ int main() {
         if (line[i] == line[j] && !has_value(values, line[i])) {
           int value = 0;
 
-          if (isupper(line[i])) value = line[i] - 38;
-          else value = line[i] - 96;
+          if (isupper(line[i])) value = line[i] - UPPERCASE_OFFSET;
+          else value = line[i] - LOWERCASE_OFFSET;
 
           values = insert(values, new_node(line[i]));
           sum += value;
