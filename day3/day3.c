@@ -40,6 +40,16 @@ int has_value(struct Node *listp, int value) {
   return 0;
 }
 
+void free_list(struct Node *listp) {
+  struct Node *next;
+
+  for (; listp != NULL; listp = next) {
+    next = listp->next;
+
+    free(listp);
+  }
+}
+
 int main() {
   struct Node *values = NULL;
 
@@ -70,6 +80,7 @@ int main() {
       }
     }
 
+    free_list(values);
     values = NULL;
   }
 
