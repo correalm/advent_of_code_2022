@@ -30,13 +30,9 @@ int has_value(struct Node *listp, int value) {
 
   struct Node *head = listp;
 
-  if (head->next == NULL) {
+  do {
     if (value == head->value) return head->value;
-  }
-
-  for (; head->next != NULL; head = head->next) {
-    if (value == head->value) return head->value;
-  }
+  } while (head->next != NULL);
 
   return 0;
 }
@@ -48,8 +44,6 @@ int main() {
   char *line = NULL;
   int sum = 0;
 
-  int count = 0;
-  
   size_t len = 0;
   ssize_t read;
 
@@ -73,7 +67,6 @@ int main() {
       }
     }
 
-    count++;
     values = NULL;
   }
 
