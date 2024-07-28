@@ -8,3 +8,8 @@
     - answer part 2: 13448 points
     - TIPS:
         - structs and enums are very useful
+
+# Day 3
+    - answer: 7917
+    - TIPS:
+        - need to find a way to cross the values one time only;
