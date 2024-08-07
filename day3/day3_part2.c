@@ -20,12 +20,6 @@ struct Letter {
 
 struct Letter *symtab[NHASH];
 
-unsigned int hash(int letter) {
-  unsigned int h = MULTIPLIER * letter;
-
-  return h % NHASH;
-}
-
 struct Letter* lookup(int letter, int create) {
   int h = letter;
   struct Letter *sym;
@@ -90,10 +84,6 @@ int main(void) {
         if (sym == NULL) continue;
 
         if (sym->line_count == 2) sum += sym->letter;
-
-        // for (int i = 0; i < 3; i++) {
-        //   sym->lines[i] = 0;
-        // }
 
         symtab[i] = NULL;
       }
