@@ -65,9 +65,9 @@ int main(void) {
         test = symtab[value];
 
         if (test) {
-          int foo = test->lines[count];
+          int already_on_line = test->lines[count];
 
-          if (!foo) {
+          if (!already_on_line) {
             test->lines[count] = count;
             test->line_count++;
           }
