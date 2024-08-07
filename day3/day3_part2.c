@@ -4,14 +4,17 @@
 #include <string.h>
 #include <limits.h>
 
-int const UPPERCASE_OFFSET = 38;
-int  const LOWERCASE_OFFSET = 96;
-
-enum { MULTIPLIER = 31, NHASH = 52 };
+enum {
+  MULTIPLIER = 31,
+  NHASH = 52,
+  UPPERCASE_OFFSET = 38,
+  LOWERCASE_OFFSET = 96
+};
 
 struct Letter {
   int letter;
-  int count;
+  int line_count;
+  int lines[3];
   struct Letter *next;
 };
 
@@ -23,11 +26,9 @@ unsigned int hash(int letter) {
   return h % NHASH;
 }
 
-struct Letter* lookup(int letter, int create, int value) {
-  int h;
+struct Letter* lookup(int letter, int create) {
+  int h = letter;
   struct Letter *sym;
-
-  h = letter;
 
   for (sym = symtab[h]; sym != NULL; sym = sym->next) {
     if (letter == sym->letter) return sym;
@@ -36,7 +37,7 @@ struct Letter* lookup(int letter, int create, int value) {
   if (create) {
     sym = (struct Letter *) malloc(sizeof(struct Letter));
     sym->letter = letter;
-    sym->count = 1;
+    sym->line_count = 0;
     sym->next = symtab[h];
     symtab[h] = sym;
   }
@@ -52,28 +53,54 @@ int main(void) {
   size_t len = 0;
   ssize_t read;
 
-  stream = fopen("./test.txt", "r");
+  stream = fopen("./puzzle.txt", "r");
   int count = 0;
 
   while ((read = getline(&line, &len, stream)) != -1) {
     int string_size = read - 1;
 
+    for (int i = 0; i < string_size; i++) {
+      int value = isupper(line[i]) ? (line[i] - UPPERCASE_OFFSET) : (line[i] - LOWERCASE_OFFSET);
 
-    for (int i = 0; i <= string_size; i++) {
-      struct Letter *letter = lookup(line[i], 0, count);
+      struct Letter *test = NULL;
 
-      if (letter == NULL) lookup(line[i], 1, 1);
-      else {
-        letter->count++;
-        printf("LETTER COUNT: %i | LETTER: %i\n", letter->count, letter->letter);
+      if (count == 0) {
+        test = lookup(value, 1);
+        test->lines[count] = count;
+      } else {
+        test = symtab[value];
+
+        if (test) {
+          int foo = test->lines[count];
+
+          if (!foo) {
+            test->lines[count] = count;
+            test->line_count++;
+          }
+        }
       }
     }
 
-    count++;
-
     if (count == 2) {
-      // need calculate here
-      // and clear the state
+      struct Letter *sym;
+
+      for (int i = 0; i <= NHASH; i++) {
+        sym = symtab[i];
+
+        if (sym == NULL) continue;
+
+        if (sym->line_count == 2) sum += sym->letter;
+
+        // for (int i = 0; i < 3; i++) {
+        //   sym->lines[i] = 0;
+        // }
+
+        symtab[i] = NULL;
+      }
+
+      count = 0;
+    } else {
+      count++;
     }
   }
 
