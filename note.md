@@ -11,6 +11,7 @@
 
 # Day 3
     - answer: 7917
+    - answer part 2: 2585
     - TIPS:
         - need to find a way to cross the values one time only;
         - first implementation takes more than 1M instructions. This is insane!
@@ -21,3 +22,6 @@
           - i can use callgrind to profile the code
             - valgrind --tool=callgrind ./executable
             - callgrind_annotate callgrind.out
+        - part II
+          - need fix memory leaks
+          - need simplify the code
