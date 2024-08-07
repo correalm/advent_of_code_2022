@@ -55,22 +55,20 @@ int main(void) {
 
     for (int i = 0; i < string_size; i++) {
       int value = isupper(line[i]) ? (line[i] - UPPERCASE_OFFSET) : (line[i] - LOWERCASE_OFFSET);
-
-      struct Letter *test = NULL;
+      struct Letter *letter = NULL;
 
       if (count == 0) {
-        test = lookup(value, 1);
-        test->lines[count] = count;
-      } else {
-        test = symtab[value];
+        letter = lookup(value, 1);
+        letter->lines[count] = count;
+        continue;
+      }
 
-        if (test) {
-          int already_on_line = test->lines[count];
+      if ((letter = symtab[value]) != NULL) {
+        int already_on_line = letter->lines[count];
 
-          if (!already_on_line) {
-            test->lines[count] = count;
-            test->line_count++;
-          }
+        if (!already_on_line) {
+          letter->lines[count] = count;
+          letter->line_count++;
         }
       }
     }
@@ -79,9 +77,7 @@ int main(void) {
       struct Letter *sym;
 
       for (int i = 0; i <= NHASH; i++) {
-        sym = symtab[i];
-
-        if (sym == NULL) continue;
+        if ((sym = symtab[i]) == NULL) continue;
 
         if (sym->line_count == 2) sum += sym->letter;
 
