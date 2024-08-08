@@ -77,9 +77,9 @@ int main(void) {
       struct Letter *sym;
 
       for (int i = 0; i <= NHASH; i++) {
-        if ((sym = symtab[i]) == NULL) continue;
-
-        if (sym->line_count == 2) sum += sym->letter;
+        if ((sym = symtab[i]) != NULL) {
+          if (sym->line_count == 2) sum += sym->letter;
+        }
 
         symtab[i] = NULL;
       }
