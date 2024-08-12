@@ -6,6 +6,7 @@
 
 enum {
   NHASH = 52,
+  GROUP_SIZE = 3,
   UPPERCASE_OFFSET = 38,
   LOWERCASE_OFFSET = 96
 };
@@ -29,20 +30,26 @@ struct Dict* lookup(int key, int create) {
   return value;
 }
 
-int validate_value (struct Dict* value) {
+int validate_value(struct Dict* value) {
   int result = 0;
 
-  result += value->lines[0];
-  result += value->lines[1];
-  result += value->lines[2];
+  for (int i = 0; i < GROUP_SIZE; i++) {
+    result += value->lines[i];
+  }
 
-  return result == 6 ? 1 : 0;
+  return result == GROUP_SIZE ? 1 : 0;
 }
 
-void reset_value (struct Dict* value) {
-  value->lines[0] = 0;
-  value->lines[1] = 0;
-  value->lines[2] = 0;
+void reset_value(struct Dict* value) {
+  for (int i = 0; i < GROUP_SIZE; i++) {
+    value->lines[i] = 0;
+  }
+}
+
+void free_table() {
+  for (int i = 0; i <= NHASH; i++) {
+    if (table[i] != NULL) free(table[i]);
+  }
 }
 
 int main(void) {
@@ -62,20 +69,15 @@ int main(void) {
       int key = isupper(line[i]) ? (line[i] - UPPERCASE_OFFSET) : (line[i] - LOWERCASE_OFFSET);
 
       struct Dict* value = lookup(key, 1);
-      // validate only with booleans
-      value->lines[count] = count + 1;
+      value->lines[count] = 1;
     }
 
-    if (count >= 2) {
+    if (count == GROUP_SIZE - 1) {
       struct Dict* value;
 
       for (int i = 0; i <= NHASH; i++) {
-        value = table[i];
-
-        if (value != NULL) {
-          int need_count = validate_value(value);
-
-          if (need_count) sum += value->key;
+        if ((value = table[i]) != NULL) {
+          if (validate_value(value)) sum += value->key;
 
           reset_value(value);
         }
@@ -89,6 +91,7 @@ int main(void) {
 
   printf("RESULT: %i\n", sum);
 
+  free_table();
   free(line);
   fclose(stream);
 }
