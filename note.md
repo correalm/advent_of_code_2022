@@ -23,5 +23,5 @@
             - valgrind --tool=callgrind ./executable
             - callgrind_annotate callgrind.out
         - part II
-          - need fix memory leaks
-          - need simplify the code
+          - need fix memory leaks (OK!)
+          - need simplify the code (OK!)
