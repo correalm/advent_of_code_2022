@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <limits.h>
+#include <stdbool.h>
 
 enum {
   NHASH = 52,
@@ -30,14 +30,14 @@ struct Dict* lookup(int key, int create) {
   return value;
 }
 
-int validate_value(struct Dict* value) {
+_Bool present_in_all_lines(struct Dict* value) {
   int result = 0;
 
   for (int i = 0; i < GROUP_SIZE; i++) {
     result += value->lines[i];
   }
 
-  return result == GROUP_SIZE ? 1 : 0;
+  return result == GROUP_SIZE;
 }
 
 void reset_value(struct Dict* value) {
@@ -77,7 +77,7 @@ int main(void) {
 
       for (int i = 0; i <= NHASH; i++) {
         if ((value = table[i]) != NULL) {
-          if (validate_value(value)) sum += value->key;
+          if (present_in_all_lines(value)) sum += value->key;
 
           reset_value(value);
         }
