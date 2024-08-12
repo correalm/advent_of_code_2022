@@ -5,83 +5,80 @@
 #include <limits.h>
 
 enum {
-  MULTIPLIER = 31,
   NHASH = 52,
   UPPERCASE_OFFSET = 38,
   LOWERCASE_OFFSET = 96
 };
 
-struct Letter {
-  int letter;
-  int line_count;
+struct Dict {
+  int key;
   int lines[3];
-  struct Letter *next;
 };
 
-struct Letter *symtab[NHASH];
+struct Dict *table[NHASH];
 
-struct Letter* lookup(int letter, int create) {
-  int h = letter;
-  struct Letter *sym;
+struct Dict* lookup(int key, int create) {
+  struct Dict *value = table[key];
 
-  for (sym = symtab[h]; sym != NULL; sym = sym->next) {
-    if (letter == sym->letter) return sym;
+  if (create && value == NULL) {
+    value = (struct Dict*) malloc(sizeof(struct Dict));
+    value->key = key;
+    table[key] = value;
   }
 
-  if (create) {
-    sym = (struct Letter *) malloc(sizeof(struct Letter));
-    sym->letter = letter;
-    sym->line_count = 0;
-    sym->next = symtab[h];
-    symtab[h] = sym;
-  }
+  return value;
+}
 
-  return sym;
+int validate_value (struct Dict* value) {
+  int result = 0;
+
+  result += value->lines[0];
+  result += value->lines[1];
+  result += value->lines[2];
+
+  return result == 6 ? 1 : 0;
+}
+
+void reset_value (struct Dict* value) {
+  value->lines[0] = 0;
+  value->lines[1] = 0;
+  value->lines[2] = 0;
 }
 
 int main(void) {
   FILE *stream;
   char *line = NULL;
-  int sum = 0;
+  int sum = 0, count = 0;
 
   size_t len = 0;
   ssize_t read;
 
   stream = fopen("./puzzle.txt", "r");
-  int count = 0;
 
   while ((read = getline(&line, &len, stream)) != -1) {
     int string_size = read - 1;
 
     for (int i = 0; i < string_size; i++) {
-      int value = isupper(line[i]) ? (line[i] - UPPERCASE_OFFSET) : (line[i] - LOWERCASE_OFFSET);
-      struct Letter *letter = NULL;
+      int key = isupper(line[i]) ? (line[i] - UPPERCASE_OFFSET) : (line[i] - LOWERCASE_OFFSET);
 
-      if (count == 0) {
-        letter = lookup(value, 1);
-        letter->lines[count] = count;
-        continue;
-      }
-
-      if ((letter = symtab[value]) != NULL) {
-        int already_on_line = letter->lines[count];
-
-        if (!already_on_line) {
-          letter->lines[count] = count;
-          letter->line_count++;
-        }
-      }
+      struct Dict* value = lookup(key, 1);
+      // validate only with booleans
+      value->lines[count] = count + 1;
     }
 
-    if (count == 2) {
-      struct Letter *sym;
+    if (count >= 2) {
+      struct Dict* value;
 
       for (int i = 0; i <= NHASH; i++) {
-        if ((sym = symtab[i]) != NULL) {
-          if (sym->line_count == 2) sum += sym->letter;
-        }
+        value = table[i];
 
-        symtab[i] = NULL;
+        if (value != NULL) {
+          int need_count = validate_value(value);
+
+          if (need_count) sum += value->key;
+
+          reset_value(value);
+        }
       }
 
       count = 0;
