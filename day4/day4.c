@@ -7,6 +7,11 @@ struct Sections {
   char* second;
 };
 
+struct Section {
+  int start;
+  int end;
+};
+
 struct Sections get_sections(char* line) {
   static const char* DELIM = ",";
   struct Sections result;
@@ -17,22 +22,41 @@ struct Sections get_sections(char* line) {
   return result;
 }
 
+struct Section get_section_interval(char* section) {
+  static const char* DELIM = "-";
+  struct Section result;
+
+  result.start = atoi(strtok(section, DELIM));
+  result.end = atoi(strtok(NULL, DELIM));
+
+  return result;
+}
+
 int main() {
   FILE *stream;
   char *line = NULL;
+  int result = 0;
 
   size_t len = 0;
 
-  stream = fopen("./test.txt", "r");
+  stream = fopen("./puzzle.txt", "r");
 
   while (getline(&line, &len, stream) != -1) {
     struct Sections sections = get_sections(line);
 
+    struct Section first_section = get_section_interval(sections.first);
+    struct Section second_section = get_section_interval(sections.second);
 
-    printf("VALUE OF FIRST: %s | SECOND: %s", sections.first, sections.second);
 
+    if (
+      (first_section.start <= second_section.start && first_section.end >= second_section.end)
+      || (second_section.start <= first_section.start && second_section.end >= first_section.end)
+    ) {
+      result++;
+    }
   }
 
+  printf("RESULT: %i\n", result);
   free(line);
   fclose(stream);
 }
