@@ -25,3 +25,9 @@
         - part II
           - need fix memory leaks (OK!)
           - need simplify the code (OK!)
+
+# Day 4
+    - answer: 542
+    - answer part 2: 900
+    - TIPS:
+        - Math is very cool
