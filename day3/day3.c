@@ -2,7 +2,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <limits.h>
 
 int const UPPERCASE_OFFSET = 38;
 int const LOWERCASE_OFFSET = 96;
