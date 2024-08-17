@@ -32,6 +32,10 @@ struct Section get_section_interval(char* section) {
   return result;
 }
 
+_Bool fully_contains(struct Section section_1, struct Section section_2) {
+  return (section_1.start <= section_2.start && section_1.end >= section_2.end);
+}
+
 int main() {
   FILE *stream;
   char *line = NULL;
@@ -48,10 +52,7 @@ int main() {
     struct Section second_section = get_section_interval(sections.second);
 
 
-    if (
-      (first_section.start <= second_section.start && first_section.end >= second_section.end)
-      || (second_section.start <= first_section.start && second_section.end >= first_section.end)
-    ) {
+    if (fully_contains(first_section, second_section) || fully_contains(second_section, first_section)) {
       result++;
     }
   }
