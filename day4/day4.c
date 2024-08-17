@@ -22,11 +22,10 @@ int main() {
   char *line = NULL;
 
   size_t len = 0;
-  ssize_t read;
 
   stream = fopen("./test.txt", "r");
 
-  while ((read = getline(&line, &len, stream)) != -1) {
+  while (getline(&line, &len, stream) != -1) {
     struct Sections sections = get_sections(line);
 
 
