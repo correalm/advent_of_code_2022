@@ -16,10 +16,14 @@ _Bool is_valid( int value ) {
   return (value && !isspace(value) && value != '[' && value != ']');
 }
 
+_Bool need_skip_line( char* line ) {
+  return line[0] == '\n' || line[1] == '1';
+}
+
 int find_column( double index ) {
   static const int COLUMN_OFFSET = 3;
 
-  return round(index / COLUMN_OFFSET);
+  return index ? (round(index / COLUMN_OFFSET) - 1) : 0;
 }
 
 void insert( struct Stack* stack, int value ) {
@@ -45,6 +49,28 @@ struct Stack* lookup( int key, _Bool create ) {
   return value;
 }
 
+void update_stacks( int column, int value ) {
+  struct Stack* current_stack = lookup(column, true);
+
+  current_stack->key = column;
+  insert(current_stack, value);
+}
+
+
+// TO DELETE:
+void print_values() {
+  for (int i = 0; i < 10; i++) {
+    if (stacks[i]) {
+      printf("STACK KEY: %i\n", stacks[i]->key);
+      for (int j = 0; j < 10; j++) {
+        printf("\t -> STACK value: %c\n", stacks[i]->values[j]);
+      }
+
+      printf("\n\n");
+    }
+  }
+}
+
 int main() {
   FILE *stream;
   char *line = NULL;
@@ -55,41 +81,16 @@ int main() {
   stream = fopen("./test.txt", "r");
 
   while (getline(&line, &len, stream) != -1) {
-    if (line[1] == '1') continue;
+    if (need_skip_line(line)) continue;
 
     for (int i = 0; i< len; i++) {
-      if (is_valid(line[i])) {
-        int column;
-
-        if (i > 1) {
-          column = find_column(i) - 1;
-          struct Stack* current_stack = lookup(column, true);
-
-          current_stack->key = column;
-          insert(current_stack, line[i]);
-        } else {
-          column = 0;
-          struct Stack* current_stack = lookup(column, true);
-
-          current_stack->key = column;
-          insert(current_stack, line[i]);
-        }
-      }
+      if (is_valid(line[i])) update_stacks(find_column(i > 1 ? i : 0), line[i]);
     }
 
     line_index++;
   }
 
-  for (int i = 0; i < 10; i++) {
-    if (stacks[i]) {
-      printf("STACK KEY: %i\n", stacks[i]->key);
-      for (int j = 0; j < 10; j++) {
-        printf("STACK value: %c\n", stacks[i]->values[j]);
-      }
-
-      printf("\n\n");
-    }
-  }
+  print_values();
 
   // printf("RESULT: %i\n", result);
   free(line);
