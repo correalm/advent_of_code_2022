@@ -1,69 +1,97 @@
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
+#include <math.h>
 
-char get_token_value(char * token) {
-  static const char* DELIM = "[";
+struct Stack {
+  int key;
+  int values[26];
+};
 
-  char* value;
+struct Stack *stacks[10];
 
-  while ((value = strsep(&token, DELIM))) {
-    if (value[0]) return value[0];
-  }
-
-  return *value;
+_Bool is_valid( int value ) {
+  return (value && !isspace(value) && value != '[' && value != ']');
 }
 
-int initial_poistion(char* line) {
-  int i = 0;
-  int result = line[i];
+int find_column( double index ) {
+  static const int COLUMN_OFFSET = 3;
 
-  while (result == 32) {
-    i++;
-    result = line[i];
-  }
-
-  return  i + 1;
+  return round(index / COLUMN_OFFSET);
 }
 
-void build_stacks(char* line) {
-  static const char* DELIM = " ";
-  char* token = strtok(line, DELIM);
-  int count = 1;
+void insert( struct Stack* stack, int value ) {
+  for (int i = 0; i <= 26; i++) {
+    if (!stack->values[i]) {
+      stack->values[i] = value;
+      return;
+    }
+  }
+}
 
-  if (line[0] == 32) {
-    printf("INITIAL TOKEN %i\n", initial_poistion(line));
+struct Stack* lookup( int key, _Bool create ) {
+  struct Stack* value = stacks[key];
+
+  if (create && value == NULL) {
+    value = (struct Stack*) malloc(sizeof(struct Stack));
+    value->key = key;
+
+    stacks[key] = value;
+    return value;
   }
 
-
-  while (token != NULL) {
-    char value = get_token_value(token);
-
-    printf("COUNT %i | value: %c \n", count, value);
-
-    token = strtok(NULL, DELIM);
-    count++;
-  }
-
-
-
+  return value;
 }
 
 int main() {
   FILE *stream;
   char *line = NULL;
-  int result = 0;
+  int result = 0, line_index = 0;
 
   size_t len = 0;
 
   stream = fopen("./test.txt", "r");
 
   while (getline(&line, &len, stream) != -1) {
-    build_stacks(line);
+    if (line[1] == '1') continue;
 
+    for (int i = 0; i< len; i++) {
+      if (is_valid(line[i])) {
+        int column;
+
+        if (i > 1) {
+          column = find_column(i) - 1;
+          struct Stack* current_stack = lookup(column, true);
+
+          current_stack->key = column;
+          insert(current_stack, line[i]);
+        } else {
+          column = 0;
+          struct Stack* current_stack = lookup(column, true);
+
+          current_stack->key = column;
+          insert(current_stack, line[i]);
+        }
+      }
+    }
+
+    line_index++;
+  }
+
+  for (int i = 0; i < 10; i++) {
+    if (stacks[i]) {
+      printf("STACK KEY: %i\n", stacks[i]->key);
+      for (int j = 0; j < 10; j++) {
+        printf("STACK value: %c\n", stacks[i]->values[j]);
+      }
+
+      printf("\n\n");
+    }
   }
 
   // printf("RESULT: %i\n", result);
   free(line);
   fclose(stream);
-}
+ }
