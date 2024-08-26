@@ -21,9 +21,10 @@ _Bool need_skip_line( char* line ) {
 }
 
 int find_column( double index ) {
-  static const int COLUMN_OFFSET = 3;
+  static const int COLUMN_OFFSET = 4;
+  int result = (int) floor(index / COLUMN_OFFSET);
 
-  return index ? (round(index / COLUMN_OFFSET) - 1) : 0;
+  return index ? result : 0;
 }
 
 void insert( struct Stack* stack, int value ) {
