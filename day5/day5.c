@@ -13,7 +13,7 @@ struct Stack {
 struct Stack *stacks[10];
 
 _Bool is_valid( int value ) {
-  return (value && !isspace(value) && value != '[' && value != ']');
+  return value >= 65 && value <= 90;
 }
 
 _Bool need_skip_line( char* line ) {
