@@ -31,3 +31,8 @@
     - answer part 2: 900
     - TIPS:
         - Math is very cool
+
+# Day 5
+ - answer: VWLCWGSDQ
+ - TIPS: fuck!
+     - need to read more about type castaing. I have some troubles with round and floor functions...
