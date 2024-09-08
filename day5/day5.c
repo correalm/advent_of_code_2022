@@ -84,6 +84,12 @@ void reorganize_stack( int source, int target, int count ) {
   }
 }
 
+void free_table() {
+  for (int i = 0; i < STACKS_COUNT; i++) {
+    if (stacks[i]) free(stacks[i]);
+  }
+}
+
 
 // TO DELETE:
 void print_values() {
@@ -134,6 +140,7 @@ int main() {
 
   print_values();
 
+  free_table();
   free(line);
   fclose(stream);
  }
