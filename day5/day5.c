@@ -48,7 +48,6 @@ struct Stack* lookup( int key ) {
     value->key = key;
 
     stacks[key] = value;
-    return value;
   }
 
   return value;
