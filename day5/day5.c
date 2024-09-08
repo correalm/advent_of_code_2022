@@ -91,14 +91,11 @@ void free_table() {
 }
 
 
-// TO DELETE:
 void print_values() {
-  for (int i = 0; i <= 10; i++) {
+  for (int i = 0; i <= STACKS_COUNT; i++) {
     if (stacks[i]) {
       printf("STACK KEY: %i\n", stacks[i]->key);
-      for (int j = 0; j < 10; j++) {
-        printf("\t -> STACK value: %c\n", stacks[i]->values[j]);
-      }
+      printf("\t -> STACK value: %c\n", stacks[i]->values[0]);
 
       printf("\n\n");
     }
