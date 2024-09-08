@@ -4,14 +4,17 @@
 #include <string.h>
 #include <math.h>
 
-int const STACK_SIZE = 100;
+enum {
+  STACK_SIZE = 100,
+  STACKS_COUNT = 10
+};
 
 struct Stack {
   int key;
-  int values[100];
+  int values[STACK_SIZE];
 };
 
-struct Stack *stacks[10];
+struct Stack *stacks[STACKS_COUNT];
 
 _Bool is_valid( int value ) {
   return value >= 65 && value <= 90;
