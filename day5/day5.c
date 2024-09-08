@@ -40,10 +40,10 @@ void insert( struct Stack* stack, int value ) {
   }
 }
 
-struct Stack* lookup( int key, _Bool create ) {
+struct Stack* lookup( int key ) {
   struct Stack* value = stacks[key];
 
-  if (create && !value) {
+  if (!value) {
     value = (struct Stack*) malloc(sizeof(struct Stack));
     value->key = key;
 
@@ -55,7 +55,7 @@ struct Stack* lookup( int key, _Bool create ) {
 }
 
 void update_stacks( int column, int value ) {
-  struct Stack* current_stack = lookup(column, true);
+  struct Stack* current_stack = lookup(column);
 
   current_stack->key = column;
   insert(current_stack, value);
