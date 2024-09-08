@@ -40,7 +40,7 @@ void insert( struct Stack* stack, int value ) {
 struct Stack* lookup( int key, _Bool create ) {
   struct Stack* value = stacks[key];
 
-  if (create && value == NULL) {
+  if (create && !value) {
     value = (struct Stack*) malloc(sizeof(struct Stack));
     value->key = key;
 
