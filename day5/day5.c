@@ -31,13 +31,23 @@ int find_column( double index ) {
   return index ? result : 0;
 }
 
-void insert( struct Stack* stack, int value ) {
+int find_index( struct Stack* stack ) {
+  int index = -1;
+
   for (int i = 0; i <= STACK_SIZE; i++) {
     if (!stack->values[i]) {
-      stack->values[i] = value;
-      return;
+      index = i;
+      break;
     }
   }
+
+  return index;
+}
+
+void insert( struct Stack* stack, int value ) {
+  int index = find_index(stack);
+
+  stack->values[index] = value;
 }
 
 struct Stack* lookup( int key ) {
@@ -114,7 +124,7 @@ int main() {
     if (need_skip_line(line)) continue;
 
     if (line[0] == 'm') {
-      char* cp;
+      char cp[strnlen(line, 100)];
       strcpy(cp, line);
 
       int count = atoi(strtok(cp, "move "));
@@ -126,7 +136,7 @@ int main() {
     }
 
     for (int i = 0; i < len; i++) {
-      if (is_valid(line[i])) {
+      if (line[i] && is_valid(line[i])) {
         update_stacks(find_column(i > 1 ? i : 0), line[i]);
       }
     }
@@ -139,4 +149,6 @@ int main() {
   free_table();
   free(line);
   fclose(stream);
+
+  return 0;
  }
