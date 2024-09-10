@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#include "day5_part2.h"
 
 enum {
   STACK_SIZE = 100,
@@ -100,21 +101,18 @@ void free_table() {
 }
 
 
-void print_values() {
+void get_result( char* result ) {
   for (int i = 0; i <= STACKS_COUNT; i++) {
     if (stacks[i]) {
-      printf("STACK KEY: %i\n", stacks[i]->key);
-      printf("\t -> STACK value: %c\n", stacks[i]->values[0]);
-
-      printf("\n\n");
+      result[i] = stacks[i]->values[0];
     }
   }
 }
 
-int main() {
+char* day5_part2() {
   FILE *stream;
   char *line = NULL;
-  int result = 0, line_index = 0;
+  int line_index = 0;
 
   size_t len = 0;
 
@@ -144,11 +142,13 @@ int main() {
     line_index++;
   }
 
-  print_values();
+  char* result = malloc(STACKS_COUNT * sizeof(char));
+
+  get_result(result);
 
   free_table();
   free(line);
   fclose(stream);
 
-  return 0;
- }
+  return result;
+}
