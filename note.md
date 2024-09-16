@@ -41,3 +41,4 @@
 # Day 6
     - answer: 1140
     - TIPS: TDD men!
+        - (Σ) 0.05ms to run. Blazingly fast!
