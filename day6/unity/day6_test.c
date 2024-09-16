@@ -51,9 +51,9 @@ void day6_part_one_returns_the_correct_value(void) {
 
 int main(void) {
   UNITY_BEGIN();
+  RUN_TEST(get_chunck_gets_the_correct_chunk);
   RUN_TEST(day6_part_one_returns_the_correct_value);
   RUN_TEST(day6_part_one_returns_the_correct_error);
-  RUN_TEST(get_chunck_gets_the_correct_chunk);
   RUN_TEST(validate_chunck_returns_the_correct_value);
   return UNITY_END();
 }
