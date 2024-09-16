@@ -28,6 +28,18 @@ void get_chunck_gets_the_correct_chunk(void) {
   free(result);
 }
 
+void validate_chunck_returns_the_correct_value(void) {
+  char *chunk_wrong = "abfb";
+  char *chunk_wrong_2 = "afga";
+  char *chunk = "zsde";
+
+  int chunk_size = 4;
+
+  TEST_ASSERT_EQUAL_INT(0, validate_chunk(chunk_wrong, chunk_size));
+  TEST_ASSERT_EQUAL_INT(0, validate_chunk(chunk_wrong_2, chunk_size));
+  TEST_ASSERT_EQUAL_INT(1, validate_chunk(chunk, chunk_size));
+}
+
 void day6_part_one_returns_the_correct_value(void) {
   TEST_ASSERT_EQUAL_INT(day6("./unity/test1.txt"), 5);
   // TEST_ASSERT_EQUAL_INT(day6("./unity/test2.txt"), 6);
@@ -37,8 +49,9 @@ void day6_part_one_returns_the_correct_value(void) {
 
 int main(void) {
   UNITY_BEGIN();
-  // RUN_TEST(day6_part_one_returns_the_correct_value);
-  // RUN_TEST(day6_part_one_returns_the_correct_error);
+  RUN_TEST(day6_part_one_returns_the_correct_value);
+  RUN_TEST(day6_part_one_returns_the_correct_error);
   RUN_TEST(get_chunck_gets_the_correct_chunk);
+  RUN_TEST(validate_chunck_returns_the_correct_value);
   return UNITY_END();
 }
