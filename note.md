@@ -37,3 +37,7 @@
     - answer part 2: TCGLQSLPW
     - TIPS: fuck!
         - need to read more about type castaing. I have some troubles with round and floor functions...
+
+# Day 6
+    - answer: 1140
+    - TIPS: TDD men!
