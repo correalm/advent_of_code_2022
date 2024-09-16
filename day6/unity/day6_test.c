@@ -41,10 +41,12 @@ void validate_chunck_returns_the_correct_value(void) {
 }
 
 void day6_part_one_returns_the_correct_value(void) {
-  TEST_ASSERT_EQUAL_INT(day6("./unity/test1.txt"), 5);
-  // TEST_ASSERT_EQUAL_INT(day6("./unity/test2.txt"), 6);
-  // TEST_ASSERT_EQUAL_INT(day6("./unity/test3.txt"), 10);
-  // TEST_ASSERT_EQUAL_INT(day6("./unity/test4.txt"), 11);
+  TEST_ASSERT_EQUAL_INT(day6("./unity/test5.txt"), 5);
+  TEST_ASSERT_EQUAL_INT(day6("./unity/test6.txt"), 6);
+  TEST_ASSERT_EQUAL_INT(day6("./unity/test10.txt"), 10);
+  TEST_ASSERT_EQUAL_INT(day6("./unity/test11.txt"), 11);
+
+  TEST_ASSERT_EQUAL_INT(day6("./unity/puzzle.txt"), 1140);
 }
 
 int main(void) {
