@@ -31,15 +31,20 @@ int day6(char *path) {
   size_t len = 0;
   ssize_t read;
 
-  char *chunk = malloc(4 * sizeof(typeof(char)));
+  int result = 0;
 
   if ((stream = fopen(path, "r")) == NULL) return -1;
+
+  char *chunk = malloc(4 * sizeof(typeof(char)));
 
   while ((read = getline(&line, &len, stream)) != -1) {
     for (int i = 0; i < read - 1; i++) {
       get_chunk(chunk, line, i, CHUNK_SIZE);
 
-      if (validate_chunk(chunk, CHUNK_SIZE) > 0) return CHUNK_SIZE + i;
+      if (validate_chunk(chunk, CHUNK_SIZE) > 0) {
+        result = CHUNK_SIZE + i;
+        break;
+      }
     }
   }
 
@@ -47,5 +52,5 @@ int day6(char *path) {
   free(line);
   fclose(stream);
 
-  return 0;
+  return result;
  }
