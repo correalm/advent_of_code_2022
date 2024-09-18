@@ -4,7 +4,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-enum { CHUNK_SIZE = 4 };
+enum { PACKET_CHUNK_SIZE = 4, MESSAGE_CHUNK_SIZE = 14 };
+enum { PACKET_CODE = 1, MESSAGE_CODE = 2 };
 
 char* get_chunk(char* result, char* line, int start, int chunk_size) {
   for (int i = 0; i < chunk_size; i++) {
@@ -24,7 +25,20 @@ int validate_chunk(char *chunk, int chunk_size) {
   return 1;
 }
 
-int day6(char *path) {
+int day6(char *path, int operation_code) {
+  int chunk_size = 0;
+
+  switch (operation_code) {
+    case PACKET_CODE:
+      chunk_size = PACKET_CHUNK_SIZE;
+      break;
+    case MESSAGE_CODE:
+      chunk_size = MESSAGE_CHUNK_SIZE;
+      break;
+    default:
+      break;
+  }
+
   FILE *stream;
   char *line = NULL;
 
@@ -39,10 +53,10 @@ int day6(char *path) {
 
   while ((read = getline(&line, &len, stream)) != -1) {
     for (int i = 0; i < read - 1; i++) {
-      get_chunk(chunk, line, i, CHUNK_SIZE);
+      get_chunk(chunk, line, i, chunk_size);
 
-      if (validate_chunk(chunk, CHUNK_SIZE) > 0) {
-        result = CHUNK_SIZE + i;
+      if (validate_chunk(chunk, chunk_size) > 0) {
+        result = chunk_size + i;
         break;
       }
     }
