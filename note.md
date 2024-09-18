@@ -40,5 +40,7 @@
 
 # Day 6
     - answer: 1140
+    - answer part 2: 3495
     - TIPS: TDD men!
         - (Σ) 0.05ms to run. Blazingly fast!
+        - part 2 is really easy with functions as modules
