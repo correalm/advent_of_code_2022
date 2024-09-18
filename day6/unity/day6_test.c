@@ -9,7 +9,7 @@ void tearDown(void) {
 }
 
 void day6_part_one_returns_the_correct_error(void) {
-  TEST_ASSERT_EQUAL_INT(day6("./foo"), -1);
+  TEST_ASSERT_EQUAL_INT(day6("./foo", 1), -1);
 }
 
 void get_chunck_gets_the_correct_chunk(void) {
@@ -41,12 +41,22 @@ void validate_chunck_returns_the_correct_value(void) {
 }
 
 void day6_part_one_returns_the_correct_value(void) {
-  TEST_ASSERT_EQUAL_INT(day6("./unity/test5.txt"), 5);
-  TEST_ASSERT_EQUAL_INT(day6("./unity/test6.txt"), 6);
-  TEST_ASSERT_EQUAL_INT(day6("./unity/test10.txt"), 10);
-  TEST_ASSERT_EQUAL_INT(day6("./unity/test11.txt"), 11);
+  TEST_ASSERT_EQUAL_INT(day6("./unity/test5.txt", 1), 5);
+  TEST_ASSERT_EQUAL_INT(day6("./unity/test6.txt", 1), 6);
+  TEST_ASSERT_EQUAL_INT(day6("./unity/test10.txt", 1), 10);
+  TEST_ASSERT_EQUAL_INT(day6("./unity/test11.txt", 1), 11);
 
-  TEST_ASSERT_EQUAL_INT(day6("./unity/puzzle.txt"), 1140);
+  TEST_ASSERT_EQUAL_INT(day6("./unity/puzzle.txt", 1), 1140);
+}
+
+void day6_part_two_returns_the_correct_value(void) {
+  TEST_ASSERT_EQUAL_INT(day6("./unity/test_part2_19.txt", 2), 19);
+  TEST_ASSERT_EQUAL_INT(day6("./unity/test_part2_23_1.txt", 2), 23);
+  TEST_ASSERT_EQUAL_INT(day6("./unity/test_part2_23_2.txt", 2), 23);
+  TEST_ASSERT_EQUAL_INT(day6("./unity/test_part2_29.txt", 2), 29);
+  TEST_ASSERT_EQUAL_INT(day6("./unity/test_part2_26.txt", 2), 26);
+
+  TEST_ASSERT_EQUAL_INT(day6("./unity/puzzle.txt", 2), 1140);
 }
 
 int main(void) {
@@ -55,5 +65,6 @@ int main(void) {
   RUN_TEST(day6_part_one_returns_the_correct_value);
   RUN_TEST(day6_part_one_returns_the_correct_error);
   RUN_TEST(validate_chunck_returns_the_correct_value);
+  RUN_TEST(day6_part_two_returns_the_correct_value);
   return UNITY_END();
 }
