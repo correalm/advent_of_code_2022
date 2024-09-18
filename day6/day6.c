@@ -7,6 +7,8 @@
 enum { PACKET_CHUNK_SIZE = 4, MESSAGE_CHUNK_SIZE = 14 };
 enum { PACKET_CODE = 1, MESSAGE_CODE = 2 };
 
+static const int ERROR_CODE = -1;
+
 char* get_chunk(char* result, char* line, int start, int chunk_size) {
   for (int i = 0; i < chunk_size; i++) {
     result[i] = line[start + i]; 
@@ -36,7 +38,7 @@ int day6(char *path, int operation_code) {
       chunk_size = MESSAGE_CHUNK_SIZE;
       break;
     default:
-      break;
+      return ERROR_CODE;
   }
 
   FILE *stream;
@@ -47,7 +49,7 @@ int day6(char *path, int operation_code) {
 
   int result = 0;
 
-  if ((stream = fopen(path, "r")) == NULL) return -1;
+  if ((stream = fopen(path, "r")) == NULL) return ERROR_CODE;
 
   char *chunk = malloc(4 * sizeof(typeof(char)));
 
