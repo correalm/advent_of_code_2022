@@ -67,4 +67,4 @@ int day6(char *path, int operation_code) {
   fclose(stream);
 
   return result;
- }
+}
