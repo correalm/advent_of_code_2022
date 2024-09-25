@@ -49,4 +49,7 @@
     - Better modules
     - Header files on include/
         - need add `compile_flags.txt` file on folder to teel to LSP where find the header files. See: https://clang.llvm.org/docs/JSONCompilationDatabase.html
+    - Compiler flags
+        - -I to include directories to compiler search path (header files)
+            - one to each dir (-I include -I ../Unity)
         
