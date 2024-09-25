@@ -1,5 +1,5 @@
-#include "../../Unity/unity.h"
-#include "../day7.h"
+#include "unity.h"
+#include "day7.h"
 
 void setUp(void) {
 }
