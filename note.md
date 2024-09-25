@@ -44,3 +44,9 @@
     - TIPS: TDD men!
         - (Σ) 0.05ms to run. Blazingly fast!
         - part 2 is really easy with functions as modules
+
+# Day 7
+    - Better modules
+    - Header files on include/
+        - need add `compile_flags.txt` file on folder to teel to LSP where find the header files. See: https://clang.llvm.org/docs/JSONCompilationDatabase.html
+        
