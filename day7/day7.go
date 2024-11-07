@@ -17,6 +17,7 @@ type File struct {
 type Dir struct {
   name string
   parent *Dir
+  size int64
   childrens []*Dir
   files []File
 }
@@ -40,6 +41,7 @@ func newDir(name string, parent *Dir) *Dir {
   var dir Dir
 
   dir.name = name
+  dir.size = 0
   dir.parent = parent
 
   return &dir
@@ -74,9 +76,14 @@ func day7(path string) int {
 
       size, _ := strconv.Atoi(tokens[0])
 
-      current_dir.files = append(current_dir.files, newFile(tokens[1], size))
+      file := newFile(tokens[1], size)
+      current_dir.files = append(current_dir.files, file)
 
-      // fmt.Println(current_dir.files, "SIZE -> ", size, "Name -> ", tokens[1])
+      current_dir.size = current_dir.size + int64(file.size)
+
+      if current_dir.parent != nil {
+        current_dir.parent.size = current_dir.parent.size + current_dir.size
+      }
     }
 
     is_command, _ := regexp.MatchString(`\$`, line)
