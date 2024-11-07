@@ -22,6 +22,8 @@ type Dir struct {
   files []File
 }
 
+type ExplorerCallback func(dir *Dir)
+
 const (
   COMMAND_CD = "cd"
   COMMAND_BACK = ".."
@@ -45,6 +47,22 @@ func newDir(name string, parent *Dir) *Dir {
   dir.parent = parent
 
   return &dir
+}
+
+func explorer(dir *Dir, callback ExplorerCallback) {
+  if len(dir.childrens) == 0 {
+    callback(dir)
+  }
+
+  for i := range dir.childrens {
+    current_dir := dir.childrens[i]
+
+    if len(current_dir.childrens) > 0 {
+      explorer(current_dir, callback)
+    }
+
+    callback(current_dir)
+  }
 }
 
 func day7(path string) int {
@@ -99,7 +117,6 @@ func day7(path string) int {
 
         current_dir.childrens = append(current_dir.childrens, dir)
 
-        // fmt.Println("CURRENT AFTER APPEND: ", len(current_dir.childrens), "Name: ", current_dir.name, "NEW DIR: ", dir.name, "ROOT CHILDRENS: ", len(root.childrens))
         current_dir = dir
       } else {
         if (strings.Compare(tokens[1], COMMAND_BACK) == 0) {
@@ -109,13 +126,12 @@ func day7(path string) int {
     }
   }
   
-  for i := range root.childrens {
-    for j := range root.childrens[i].childrens {
-      for z := range root.childrens[i].childrens[j].childrens {
-        fmt.Println("Path: ", root.childrens[i].name, root.childrens[i].childrens[j].name, root.childrens[i].childrens[j].childrens[z].name, "FILES: ", root.childrens[i].childrens[j].childrens[z].files[0].size)
-      }
-    }
-  }
+  explorer(
+    &root,
+    func (dir *Dir) {
+      fmt.Printf("DIR %s has %d files | SIZE: %d \n", dir.name, len(dir.files), dir.size)
+    },
+  )
 
   return 1
 }
