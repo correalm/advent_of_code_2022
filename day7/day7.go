@@ -17,7 +17,7 @@ type File struct {
 type Dir struct {
   name string
   parent *Dir
-  childrens []Dir
+  childrens []*Dir
   files []File
 }
 
@@ -36,13 +36,13 @@ func newFile(name string, size int) File {
   return file
 }
 
-func newDir(name string, parent Dir) Dir {
+func newDir(name string, parent *Dir) *Dir {
   var dir Dir
 
   dir.name = name
-  dir.parent = &parent
+  dir.parent = parent
 
-  return dir
+  return &dir
 }
 
 func day7(path string) int {
@@ -58,10 +58,10 @@ func day7(path string) int {
   scanner.Split(bufio.ScanLines)
 
   var root Dir
-  root.name = "/"
+  root.name = "root"
   root.parent = nil
 
-  current_dir := root
+  current_dir := &root
 
   for scanner.Scan() {
     line := scanner.Text()
@@ -84,25 +84,30 @@ func day7(path string) int {
     if is_command {
       tokens := strings.Split(line, " ")
 
+      // ISTO ESTA UMA BOSTA! REFATORAR
       change_dir := (strings.Compare(tokens[1], COMMAND_CD) == 0) && (strings.Compare(tokens[2], COMMAND_BACK) != 0)
 
       if change_dir {
         dir := newDir(tokens[2], current_dir)
+
+        current_dir.childrens = append(current_dir.childrens, dir)
+
+        // fmt.Println("CURRENT AFTER APPEND: ", len(current_dir.childrens), "Name: ", current_dir.name, "NEW DIR: ", dir.name, "ROOT CHILDRENS: ", len(root.childrens))
         current_dir = dir
       } else {
-        if (strings.Compare(tokens[1], COMMAND_LS) != 0) {
-          current_dir = *current_dir.parent
+        if (strings.Compare(tokens[1], COMMAND_BACK) == 0) {
+          current_dir = current_dir.parent
         }
       }
     }
-
-
-    // if strings.Contains(line, "dir") {
-    //   tokens := strings.Split(line, " ")
-
-    //   fmt.Println("Dir name: ", tokens[1])
-    // }
-
+  }
+  
+  for i := range root.childrens {
+    for j := range root.childrens[i].childrens {
+      for z := range root.childrens[i].childrens[j].childrens {
+        fmt.Println("Path: ", root.childrens[i].name, root.childrens[i].childrens[j].name, root.childrens[i].childrens[j].childrens[z].name, "FILES: ", root.childrens[i].childrens[j].childrens[z].files[0].size)
+      }
+    }
   }
 
   return 1
