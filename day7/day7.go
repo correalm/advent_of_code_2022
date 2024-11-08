@@ -9,17 +9,11 @@ import (
 	"strings"
 )
 
-type File struct {
-  name string
-  size int
-}
-
 type Dir struct {
   name string
   parent *Dir
-  size int64
+  size int
   childrens []*Dir
-  files []File
 }
 
 type ExplorerCallback func(dir *Dir)
@@ -29,15 +23,6 @@ const (
   COMMAND_BACK = ".."
   COMMAND_LS = "ls"
 )
-
-func newFile(name string, size int) File {
-  var file File
-
-  file.name = name
-  file.size = size
-
-  return file
-}
 
 func newDir(name string, parent *Dir) *Dir {
   var dir Dir
@@ -49,10 +34,46 @@ func newDir(name string, parent *Dir) *Dir {
   return &dir
 }
 
+func getLineData(line string) (string, string, string) {
+  tokens := strings.Split(line, " ")
+
+  if len(tokens) < 3 {
+    return tokens[0], tokens[1], ""
+  }
+
+  return tokens[0], tokens[1], tokens[2]
+}
+
 func isFile(line string) (bool) {
-  match, _ := regexp.MatchString(`[0-9]+\s`, line)
+  match, err := regexp.MatchString(`[0-9]+\s`, line)
+
+  if err != nil {
+    return false
+  }
 
   return match
+}
+
+func isCommand(line string) (bool) {
+  is_command, err := regexp.MatchString(`\$`, line)
+
+  if err != nil {
+    return false
+  }
+
+  return is_command
+}
+
+func getFileData(line string) (string, int) {
+  size, name, _ := getLineData(line)
+
+  int_size, err := strconv.Atoi(size)
+
+  if err != nil {
+    return "", 0
+  }
+
+  return name, int_size
 }
 
 func explorer(dir *Dir, callback ExplorerCallback) {
@@ -93,38 +114,28 @@ func day7(path string) int {
     line := scanner.Text()
 
     if isFile(line) {
-      tokens := strings.Split(line, " ")
+      _, file_size := getFileData(line)
 
-      size, _ := strconv.Atoi(tokens[0])
-
-      file := newFile(tokens[1], size)
-      current_dir.files = append(current_dir.files, file)
-
-      current_dir.size = current_dir.size + int64(file.size)
+      current_dir.size += file_size
     }
 
-    is_command, _ := regexp.MatchString(`\$`, line)
+    if isCommand(line) {
+      _, command, path_name := getLineData(line)
 
-    if is_command {
-      tokens := strings.Split(line, " ")
-
-      // ISTO ESTA UMA BOSTA! REFATORAR
-      change_dir := (strings.Compare(tokens[1], COMMAND_CD) == 0) && (strings.Compare(tokens[2], COMMAND_BACK) != 0)
-
-      if change_dir {
-        dir := newDir(tokens[2], current_dir)
-
-        current_dir.childrens = append(current_dir.childrens, dir)
-        current_dir = dir
-      } else {
-        if (strings.Compare(tokens[1], COMMAND_CD) == 0 && strings.Compare(tokens[2], COMMAND_BACK) == 0) {
+      if strings.Compare(command, COMMAND_CD) == 0 {
+        if strings.Compare(path_name, COMMAND_BACK) == 0 {
           current_dir = current_dir.parent
+        } else {
+          dir := newDir(path_name, current_dir)
+
+          current_dir.childrens = append(current_dir.childrens, dir)
+          current_dir = dir
         }
       }
     }
 
     if current_dir.parent != nil {
-      current_dir.parent.size = current_dir.parent.size + current_dir.size
+      current_dir.parent.size += current_dir.size
     }
   }
 
