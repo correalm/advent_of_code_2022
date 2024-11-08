@@ -85,7 +85,6 @@ func day7(path string) int {
 
   for scanner.Scan() {
     line := scanner.Text()
-    fmt.Println(line)
 
     match, _ := regexp.MatchString(`[0-9]`, line)
 
@@ -98,10 +97,6 @@ func day7(path string) int {
       current_dir.files = append(current_dir.files, file)
 
       current_dir.size = current_dir.size + int64(file.size)
-
-      if current_dir.parent != nil {
-        current_dir.parent.size = current_dir.parent.size + current_dir.size
-      }
     }
 
     is_command, _ := regexp.MatchString(`\$`, line)
@@ -116,22 +111,30 @@ func day7(path string) int {
         dir := newDir(tokens[2], current_dir)
 
         current_dir.childrens = append(current_dir.childrens, dir)
-
         current_dir = dir
       } else {
-        if (strings.Compare(tokens[1], COMMAND_BACK) == 0) {
+        if (strings.Compare(tokens[1], COMMAND_CD) == 0 && strings.Compare(tokens[2], COMMAND_BACK) == 0) {
           current_dir = current_dir.parent
         }
       }
     }
+
+    if current_dir.parent != nil {
+      current_dir.parent.size = current_dir.parent.size + current_dir.size
+    }
   }
+
+  var result int = 0
   
   explorer(
     &root,
     func (dir *Dir) {
-      fmt.Printf("DIR %s has %d files | SIZE: %d \n", dir.name, len(dir.files), dir.size)
+      if dir.size < 100000 {
+        fmt.Println("-> ", dir.name)
+        result += int(dir.size)
+      }
     },
   )
 
-  return 1
+  return result
 }
