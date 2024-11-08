@@ -49,6 +49,12 @@ func newDir(name string, parent *Dir) *Dir {
   return &dir
 }
 
+func isFile(line string) (bool) {
+  match, _ := regexp.MatchString(`[0-9]+\s`, line)
+
+  return match
+}
+
 func explorer(dir *Dir, callback ExplorerCallback) {
   if len(dir.childrens) == 0 {
     callback(dir)
@@ -86,9 +92,7 @@ func day7(path string) int {
   for scanner.Scan() {
     line := scanner.Text()
 
-    match, _ := regexp.MatchString(`[0-9]`, line)
-
-    if match {
+    if isFile(line) {
       tokens := strings.Split(line, " ")
 
       size, _ := strconv.Atoi(tokens[0])
