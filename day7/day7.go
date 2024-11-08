@@ -22,6 +22,7 @@ const (
   COMMAND_CD = "cd"
   COMMAND_BACK = ".."
   COMMAND_LS = "ls"
+  MAX_DIR_SIZE = 100000
 )
 
 func newDir(name string, parent *Dir) *Dir {
@@ -34,18 +35,22 @@ func newDir(name string, parent *Dir) *Dir {
   return &dir
 }
 
-func getLineData(line string) (string, string, string) {
+func getLineData(line string) (string, string) {
   tokens := strings.Split(line, " ")
 
   if len(tokens) < 3 {
-    return tokens[0], tokens[1], ""
+    if strings.Compare(tokens[0], "$") == 0 {
+      return tokens[1], ""
+    }
+
+    return tokens[0], tokens[1]
   }
 
-  return tokens[0], tokens[1], tokens[2]
+  return tokens[1], tokens[2]
 }
 
-func isFile(line string) (bool) {
-  match, err := regexp.MatchString(`[0-9]+\s`, line)
+func isFile(value string) (bool) {
+  match, err := regexp.MatchString(`[0-9]`, value)
 
   if err != nil {
     return false
@@ -54,26 +59,16 @@ func isFile(line string) (bool) {
   return match
 }
 
-func isCommand(line string) (bool) {
-  is_command, err := regexp.MatchString(`\$`, line)
-
-  if err != nil {
-    return false
-  }
-
-  return is_command
+func isCmdChangeDir(value string) (bool) {
+  return strings.Compare(value, COMMAND_CD) == 0
 }
 
-func getFileData(line string) (string, int) {
-  size, name, _ := getLineData(line)
-
-  int_size, err := strconv.Atoi(size)
-
-  if err != nil {
-    return "", 0
+func updateParentSize(dir *Dir) {
+  if dir.parent == nil {
+    return
   }
 
-  return name, int_size
+  dir.parent.size += dir.size
 }
 
 func explorer(dir *Dir, callback ExplorerCallback) {
@@ -111,32 +106,26 @@ func day7(path string) int {
   current_dir := &root
 
   for scanner.Scan() {
-    line := scanner.Text()
+    name, value := getLineData(scanner.Text())
 
-    if isFile(line) {
-      _, file_size := getFileData(line)
+    if isFile(name) {
+      file_size, _ := strconv.Atoi(name)
 
       current_dir.size += file_size
     }
 
-    if isCommand(line) {
-      _, command, path_name := getLineData(line)
+    if isCmdChangeDir(name) {
+      if strings.Compare(value, COMMAND_BACK) == 0 {
+        current_dir = current_dir.parent
+      } else {
+        dir := newDir(value, current_dir)
 
-      if strings.Compare(command, COMMAND_CD) == 0 {
-        if strings.Compare(path_name, COMMAND_BACK) == 0 {
-          current_dir = current_dir.parent
-        } else {
-          dir := newDir(path_name, current_dir)
-
-          current_dir.childrens = append(current_dir.childrens, dir)
-          current_dir = dir
-        }
+        current_dir.childrens = append(current_dir.childrens, dir)
+        current_dir = dir
       }
     }
 
-    if current_dir.parent != nil {
-      current_dir.parent.size += current_dir.size
-    }
+    updateParentSize(current_dir)
   }
 
   var result int = 0
@@ -144,7 +133,7 @@ func day7(path string) int {
   explorer(
     &root,
     func (dir *Dir) {
-      if dir.size < 100000 {
+      if dir.size < MAX_DIR_SIZE {
         fmt.Println("-> ", dir.name)
         result += int(dir.size)
       }
