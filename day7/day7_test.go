@@ -5,10 +5,30 @@ import (
 )
 
 func TestDay7PartOne(t *testing.T) {
-  actual := day7("./__test__/fixtures/puzzle.txt")
-  expected := 1770595
+  tests := []struct {
+    name string
+    path string
+    expected int
+  }{
+    {
+      name: "returns the correct value with test fixture",
+      path: "./fixtures/test.txt",
+      expected: 95437,
+    },
+    {
+      name: "returns the correct value with puzzle fixture",
+      path: "./fixtures/puzzle.txt",
+      expected: 1770595,
+    },
+  }
 
-  if actual != expected {
-    t.Errorf("Expected: %d; Actual: %d\n", expected, actual)
+  for _, test := range tests {
+    t.Run(test.name, func(t *testing.T) {
+      actual := day7(test.path)
+
+      if test.expected != actual {
+        t.Errorf("Expected: %d; Actual: %d\n", test.expected, actual)
+      }
+    })
   }
 }
