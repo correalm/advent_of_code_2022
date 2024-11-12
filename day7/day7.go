@@ -156,9 +156,6 @@ func day7_part2(path string) int {
 	scanner.Split(bufio.ScanLines)
 
 	var root Dir
-	root.name = "root"
-	root.parent = nil
-
 	current_dir := &root
 
 	for scanner.Scan() {
