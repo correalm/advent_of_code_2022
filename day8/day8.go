@@ -65,7 +65,7 @@ func Day8(path string) int {
 				for i := index - 1; i >= 0; i-- {
 					if line[i] >= value {
 						current_value_visibility.left = false
-            break
+						break
 					}
 				}
 			}
@@ -74,7 +74,7 @@ func Day8(path string) int {
 				for i := index + 1; i < line_len; i++ {
 					if line[i] >= value {
 						current_value_visibility.rigth = false
-            break
+						break
 					}
 				}
 			}
@@ -83,7 +83,7 @@ func Day8(path string) int {
 				for i := current_line_index - 1; i >= 0; i-- {
 					if lines[i][index] >= value {
 						current_value_visibility.top = false
-            break
+						break
 					}
 				}
 			}
@@ -92,7 +92,7 @@ func Day8(path string) int {
 				for i := current_line_index + 1; i < lines_len; i++ {
 					if lines[i][index] >= value {
 						current_value_visibility.bottom = false
-            break
+						break
 					}
 				}
 			}
@@ -157,58 +157,58 @@ func Day8Part2(path string) int {
 				left   int
 				rigth  int
 			}{
-        top:    0,
+				top:    0,
 				bottom: 0,
 				left:   0,
 				rigth:  0,
 			}
 
-      // TODO: extrac this functions to helper. Can be used on both parts
+			// TODO: extrac this functions to helper. Can be used on both parts
 			if index > 0 {
 				for i := index - 1; i >= 0; i-- {
-          current_value_visibility.left++
+					current_value_visibility.left++
 
 					if line[i] >= value {
-            break
+						break
 					}
 				}
 			}
 
 			if index < line_len {
 				for i := index + 1; i < line_len; i++ {
-          current_value_visibility.rigth++
+					current_value_visibility.rigth++
 
 					if line[i] >= value {
-            break
+						break
 					}
 				}
 			}
 
 			if current_line_index > 0 {
 				for i := current_line_index - 1; i >= 0; i-- {
-          current_value_visibility.top++
+					current_value_visibility.top++
 
 					if lines[i][index] >= value {
-            break
+						break
 					}
 				}
 			}
 
 			if current_line_index < lines_len {
 				for i := current_line_index + 1; i < lines_len; i++ {
-          current_value_visibility.bottom++
+					current_value_visibility.bottom++
 
 					if lines[i][index] >= value {
-            break
+						break
 					}
 				}
 			}
 
-      scenic_score := current_value_visibility.bottom * current_value_visibility.top * current_value_visibility.left * current_value_visibility.rigth
+			scenic_score := current_value_visibility.bottom * current_value_visibility.top * current_value_visibility.left * current_value_visibility.rigth
 
-      if scenic_score > result {
-        result = scenic_score
-      }
+			if scenic_score > result {
+				result = scenic_score
+			}
 		}
 	}
 
