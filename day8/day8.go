@@ -65,16 +65,16 @@ func Day8(path string) int {
 				for i := index - 1; i >= 0; i-- {
 					if line[i] >= value {
 						current_value_visibility.left = false
+            break
 					}
 				}
 			}
 
-			// OK, i need stop the loop when some value is greather than my current value.
-			// mesure the performance impact of this improve
 			if index < line_len {
 				for i := index + 1; i < line_len; i++ {
 					if line[i] >= value {
 						current_value_visibility.rigth = false
+            break
 					}
 				}
 			}
@@ -83,6 +83,7 @@ func Day8(path string) int {
 				for i := current_line_index - 1; i >= 0; i-- {
 					if lines[i][index] >= value {
 						current_value_visibility.top = false
+            break
 					}
 				}
 			}
@@ -91,6 +92,7 @@ func Day8(path string) int {
 				for i := current_line_index + 1; i < lines_len; i++ {
 					if lines[i][index] >= value {
 						current_value_visibility.bottom = false
+            break
 					}
 				}
 			}
