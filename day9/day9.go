@@ -2,6 +2,7 @@ package day9
 
 import (
 	"bufio"
+	"fmt"
 	"os"
 	"strconv"
 	"strings"
@@ -46,8 +47,19 @@ func day9(path string) int {
       return 0
     }
 
-
+    switch direction {
+      case LEFT:
+        head_position.x = head_position.x - count
+      case RIGHT:
+        head_position.x = head_position.x + count
+      case UP:
+        head_position.y = head_position.y + count
+      case DOWN:
+        head_position.y = head_position.y - count
+    }
   }
+
+  fmt.Println(tail_position, head_position)
 
   return 0
 }
