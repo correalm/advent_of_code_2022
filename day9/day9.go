@@ -3,6 +3,7 @@ package day9
 import (
 	"bufio"
 	"fmt"
+	"math"
 	"os"
 	"strconv"
 	"strings"
@@ -22,6 +23,18 @@ const (
 
 // left - right = X axis
 // up - down = Y axis
+
+func should_update_tail_x_position(head_position Point, tail_position Point) bool {
+  diff := math.Abs(float64(head_position.x - tail_position.x))
+
+  return diff > 1
+}
+
+func should_update_tail_y_postion(head_position Point, tail_position Point) bool {
+  diff := math.Abs(float64(head_position.y - tail_position.y))
+
+  return diff > 1
+}
 
 func day9(path string) int {
 	file, err := os.Open(path)
@@ -50,12 +63,32 @@ func day9(path string) int {
     switch direction {
       case LEFT:
         head_position.x = head_position.x - count
+
+        if should_update_tail_x_position(head_position, tail_position) {
+          tail_position.x = head_position.x + 1
+          tail_position.y = head_position.y
+        }
       case RIGHT:
         head_position.x = head_position.x + count
+
+        if should_update_tail_x_position(head_position, tail_position) {
+          tail_position.x = head_position.x - 1
+          tail_position.y = head_position.y
+        }
       case UP:
         head_position.y = head_position.y + count
+
+        if should_update_tail_y_postion(head_position, tail_position) {
+          tail_position.y = head_position.y - 1
+          tail_position.x = head_position.x
+        }
       case DOWN:
         head_position.y = head_position.y - count
+
+        if should_update_tail_y_postion(head_position, tail_position) {
+          tail_position.y = head_position.y + 1
+          tail_position.x = head_position.x
+        }
     }
   }
 
