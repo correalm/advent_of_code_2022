@@ -60,7 +60,8 @@ func day9(path string) int {
   head_position := Point{0,0}
   tail_position := Point{0,0}
 
-  tail_positions := []Point{}
+  // first position counts
+  tail_positions := []Point{{0,0}}
 
 	for scanner.Scan() {
     tokens := strings.Split(scanner.Text(), " ")
@@ -71,54 +72,47 @@ func day9(path string) int {
       return 0
     }
 
-    switch direction {
+    for i := count; i > 0; i-- {
+      switch direction {
       case LEFT:
-        for i := count; i > 0; i-- {
-          head_position.x = head_position.x - 1
+        head_position.x = head_position.x - 1
 
-          if should_update_tail_x_position(head_position, tail_position) {
-            tail_position.x = head_position.x + 1
-            tail_position.y = head_position.y
+        if should_update_tail_x_position(head_position, tail_position) {
+          tail_position.x = head_position.x + 1
+          tail_position.y = head_position.y
 
-            insert_uniq(&tail_positions, tail_position)
-          }
+          insert_uniq(&tail_positions, tail_position)
         }
       case RIGHT:
-        for i := count; i > 0; i-- {
-          head_position.x = head_position.x + 1
+        head_position.x = head_position.x + 1
 
-          if should_update_tail_x_position(head_position, tail_position) {
-            tail_position.x = head_position.x - 1
-            tail_position.y = head_position.y
+        if should_update_tail_x_position(head_position, tail_position) {
+          tail_position.x = head_position.x - 1
+          tail_position.y = head_position.y
 
-            insert_uniq(&tail_positions, tail_position)
-          }
+          insert_uniq(&tail_positions, tail_position)
         }
       case UP:
-        for i := count; i > 0; i-- {
-          head_position.y = head_position.y + 1
+        head_position.y = head_position.y + 1
 
-          if should_update_tail_y_postion(head_position, tail_position) {
-            tail_position.y = head_position.y - 1
-            tail_position.x = head_position.x
+        if should_update_tail_y_postion(head_position, tail_position) {
+          tail_position.y = head_position.y - 1
+          tail_position.x = head_position.x
 
-            insert_uniq(&tail_positions, tail_position)
-          }
+          insert_uniq(&tail_positions, tail_position)
         }
       case DOWN:
-        for i := count; i > 0; i-- {
-          head_position.y = head_position.y - 1
+        head_position.y = head_position.y - 1
 
-          if should_update_tail_y_postion(head_position, tail_position) {
-            tail_position.y = head_position.y + 1
-            tail_position.x = head_position.x
+        if should_update_tail_y_postion(head_position, tail_position) {
+          tail_position.y = head_position.y + 1
+          tail_position.x = head_position.x
 
-            insert_uniq(&tail_positions, tail_position)
-          }
+          insert_uniq(&tail_positions, tail_position)
         }
+      }
     }
   }
 
-  // +1 to consider the start
-  return len(tail_positions) + 1
+  return len(tail_positions)
 }
