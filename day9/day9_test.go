@@ -12,7 +12,12 @@ func TestDay9(t *testing.T) {
 		{
 			name:     "Returns the correct value for test values",
 			path:     "./fixtures/test.txt",
-			expected: 21,
+			expected: 13,
+		},
+		{
+			name:     "Returns the correct value for puzzle values",
+			path:     "./fixtures/puzzle.txt",
+			expected: 6498,
 		},
 	}
 

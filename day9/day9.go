@@ -2,7 +2,6 @@ package day9
 
 import (
 	"bufio"
-	"fmt"
 	"math"
 	"os"
 	"strconv"
@@ -120,7 +119,6 @@ func day9(path string) int {
     }
   }
 
-  fmt.Println(tail_position, head_position, len(tail_positions) + 1)
-
-  return 0
+  // +1 to consider the start
+  return len(tail_positions) + 1
 }
